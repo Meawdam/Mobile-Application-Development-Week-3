@@ -1,15 +1,16 @@
 import 'package:frontend/logic.dart';
+import 'package:frontend/model.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('1. Get task should return a task', () async{
     Connector connector = Connector();
-    List data = await connector.getTasks();
+    List<Task> data = await connector.getTasks();
 
     // expect(data.length, 3);
-    expect(data[0]['id'], "1");
-    expect(data[0]['title'], "Cooking");
-    expect(data[0]['complete'], false);
+    expect(data[0].id, "1");
+    expect(data[0].title, "Cooking");
+    expect(data[0].complete, false);
   });
 
 }

@@ -7,12 +7,14 @@ import 'package:http/http.dart' as http;
 class Connector {
   static const String baseUrl = "http://localhost:3000/todo";
   // get task
-  Future<List<dynamic>> getTasks() async {
+  Future<List<Task>> getTasks() async {
     try {
       final http.Response res = await http.get(Uri.parse(baseUrl));
       if(res.statusCode != 200) throw Exception('Bad response');
-      final List<dynamic> data = jsonDecode(res.body);
-      return data.map((json) => Task.fromJson(json)).toList();
+      final List<dynamic> data = jsonDecode(res.body) as List<dynamic>;
+      return data
+          .map((json) => Task.fromJson(json as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       throw Exception('Error: $e');
     }
