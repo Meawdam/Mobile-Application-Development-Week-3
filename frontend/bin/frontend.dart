@@ -3,21 +3,23 @@ import 'dart:io';
 import 'package:frontend/logic.dart';
 import 'package:frontend/model.dart';
 
-void main() async{
-  final connector = Connector(); 
+void main() async {
+  final connector = Connector();
   print('--- Welcome to the Dart TODO Console ---');
   String? input;
 
-  while(input != '7') {
+  while (input != '7') {
     showMenu();
     stdout.write('Select an option : ');
     input = stdin.readLineSync();
 
-    switch(input) {
+    switch (input) {
       case '1':
-        viewTasks(connector);
+        await viewTasks(connector);
+        break;
       case '7':
         print('Good bye!');
+        break;
       default:
         print('Invalid selection, please select only 1-7!');
     }
@@ -35,14 +37,19 @@ void showMenu() {
  print('7. Exit');
 }
 
-Future<void> viewTasks(Connector c) async{
+Future<void> viewTasks(Connector connector) async {
   try {
-    List<Task> todos = await c.getTasks();
-    if(todos.isEmpty) throw Exception('No task found');
-    for(var (i, todo) in todos.indexed) {
-      print('${i+1} : $todo');
+    final List<Task> todos = await connector.getTasks();
+    if (todos.isEmpty) {
+      print('\nNo tasks found.');
+      return;
+    }
+
+    print('-------------------');
+    for (final (index, todo) in todos.indexed) {
+      print('${index + 1}. ${todo.getTask()}');
     }
   } catch (e) {
-    throw Exception('Error $e');
+    print('Error: $e');
   }
 }
