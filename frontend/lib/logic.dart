@@ -36,8 +36,32 @@ class Connector {
   }
 
   // delete task
+  Future<void> deleteTasks(String id) async {
+    try {
+      final http.Response res = await http.delete(
+        Uri.parse('$baseUrl/$id'),
+      );
+      if (res.statusCode != 200) throw Exception('Bad response');
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
 
-  //edit task
+  // edit task
+  Future<void> editTasks(String id, String title) async {
+    try {
+      final headers = {'Content-Type': 'application/json'};
+      final body = jsonEncode({'title': title});
+      final http.Response res = await http.patch(
+        Uri.parse('$baseUrl/$id'),
+        headers: headers,
+        body: body,
+      );
+      if (res.statusCode != 200) throw Exception('Bad response');
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
 
   // toggle task
 }

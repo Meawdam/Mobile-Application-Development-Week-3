@@ -20,6 +20,12 @@ void main() async {
       case '2':
         await addTasks(connector);
         break;
+      case '3':
+        await deleteTask(connector);
+        break;
+      case '5':
+        await editTask(connector);
+        break;
       case '7':
         print('Good bye!');
         break;
@@ -64,7 +70,40 @@ Future<void> addTasks(Connector connector) async {
     if (title == null || title.isEmpty) {
       throw Exception('Error, Invalid title');
     }
-    connector.addTasks(title);
+    await connector.addTasks(title);
+  } on Exception catch (e) {
+    print('Error: $e');
+  }
+}
+
+Future<void> deleteTask(Connector connector) async {
+  try {
+    stdout.write('Enter task ID : ');
+    String? id = stdin.readLineSync();
+    if (id == null || id.isEmpty) {
+      throw Exception('Error, Invalid task ID');
+    }
+    await connector.deleteTasks(id);
+  } on Exception catch (e) {
+    print('Error: $e');
+  }
+}
+
+Future<void> editTask(Connector connector) async {
+  try {
+    stdout.write('Enter task ID : ');
+    final String? id = stdin.readLineSync();
+    if (id == null || id.isEmpty) {
+      throw Exception('Error, Invalid task ID');
+    }
+
+    stdout.write('Enter new task title : ');
+    final String? title = stdin.readLineSync();
+    if (title == null || title.isEmpty) {
+      throw Exception('Error, Invalid title');
+    }
+
+    await connector.editTasks(id, title);
   } on Exception catch (e) {
     print('Error: $e');
   }

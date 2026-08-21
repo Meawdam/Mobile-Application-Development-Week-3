@@ -34,6 +34,11 @@
       "title": "Read a Book",
       "complete": false,
       "id": "-_q-fQzwCAk"
+    },
+    {
+      "title": "Updated title",
+      "complete": false,
+      "id": "GAGjggzwhVw"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
