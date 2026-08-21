@@ -17,6 +17,9 @@ void main() async {
       case '1':
         await viewTasks(connector);
         break;
+      case '2':
+        await addTasks(connector);
+        break;
       case '7':
         print('Good bye!');
         break;
@@ -27,14 +30,14 @@ void main() async {
 }
 
 void showMenu() {
- print('\n======== Menu ========');
- print('1. View Tasks');
- print('2. Add New Task');
- print('3. Delete Task');
- print('4. Toggle Task Status');
- print('5. Edit Task');
- print('6. Search Task');
- print('7. Exit');
+  print('\n======== Menu ========');
+  print('1. View Tasks');
+  print('2. Add New Task');
+  print('3. Delete Task');
+  print('4. Toggle Task Status');
+  print('5. Edit Task');
+  print('6. Search Task');
+  print('7. Exit');
 }
 
 Future<void> viewTasks(Connector connector) async {
@@ -49,7 +52,20 @@ Future<void> viewTasks(Connector connector) async {
     for (var (index, todo) in todos.indexed) {
       print('${index + 1}. $todo');
     }
-  } catch (e) {
+  } on Exception catch (e) {
+    print('Error: $e');
+  }
+}
+
+Future<void> addTasks(Connector connector) async {
+  try {
+    stdout.write('Enter new task Title : ');
+    String? title = stdin.readLineSync();
+    if (title == null || title.isEmpty) {
+      throw Exception('Error, Invalid title');
+    }
+    connector.addTasks(title);
+  } on Exception catch (e) {
     print('Error: $e');
   }
 }
