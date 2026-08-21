@@ -62,4 +62,16 @@ void main() {
     );
     expect(updatedTask.complete, isTrue);
   });
+
+  test('6. Search tasks by name should return matching tasks', () async {
+    final Connector connector = Connector();
+    const String titleToSearch = 'Search Target Task';
+    await connector.addTasks(titleToSearch);
+    final List<Task> searchResults = await connector.searchTasksByTitle(
+      'Search Target',
+    );
+
+    expect(searchResults, isNotEmpty);
+    expect(searchResults.any((task) => task.title == titleToSearch), isTrue);
+  });
 }

@@ -86,4 +86,22 @@ class Connector {
       throw Exception('Error: $e');
     }
   }
+
+  // search task
+  Future<List<Task>> searchTasksByTitle(String title) async {
+    try {
+      final List<Task> tasks = await getTasks();
+      final String query = title.trim();
+      if (query.isEmpty) return tasks;
+
+      final String normalizedQuery = query.toLowerCase();
+      return tasks
+          .where(
+            (task) => task.title.toLowerCase().contains(normalizedQuery),
+          )
+          .toList();
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
 }
