@@ -46,8 +46,8 @@ Future<void> viewTasks(Connector connector) async {
     }
 
     print('-------------------');
-    for (final (index, todo) in todos.indexed) {
-      print('${index + 1}. ${todo.getTask()}');
+    for (var (index, todo) in todos.indexed) {
+      print('${index + 1}. $todo');
     }
   } catch (e) {
     print('Error: $e');

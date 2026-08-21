@@ -13,6 +13,6 @@ void main() {
   test('2. Get task should return a task', () {
     Task task = Task('1', 'Cooking', false);
 
-    expect(task.getTask(), '[ ] Cooking');
+    expect(task.toString(), '[ ] Cooking');
   });
 }
