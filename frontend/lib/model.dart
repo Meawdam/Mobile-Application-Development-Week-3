@@ -9,4 +9,7 @@ class Task {
     String status = complete ? '[X]': '[ ]';
     return '$status $title';
   }
+
+  factory Task.fromJson(Map<String, dynamic> json) =>
+  Task(json['id'] as String, json['title'] as String, json['complete'] as bool);
 }
