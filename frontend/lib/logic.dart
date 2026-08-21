@@ -64,4 +64,26 @@ class Connector {
   }
 
   // toggle task
+  Future<void> toggleTasks(String id) async {
+    try {
+      final http.Response taskResponse = await http.get(
+        Uri.parse('$baseUrl/$id'),
+      );
+      if (taskResponse.statusCode != 200) throw Exception('Bad response');
+
+      final Task task = Task.fromJson(
+        jsonDecode(taskResponse.body) as Map<String, dynamic>,
+      );
+      final headers = {'Content-Type': 'application/json'};
+      final body = jsonEncode({'complete': !task.complete});
+      final http.Response res = await http.patch(
+        Uri.parse('$baseUrl/$id'),
+        headers: headers,
+        body: body,
+      );
+      if (res.statusCode != 200) throw Exception('Bad response');
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
 }

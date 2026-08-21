@@ -23,6 +23,9 @@ void main() async {
       case '3':
         await deleteTask(connector);
         break;
+      case '4':
+        await toggleTask(connector);
+        break;
       case '5':
         await editTask(connector);
         break;
@@ -104,6 +107,20 @@ Future<void> editTask(Connector connector) async {
     }
 
     await connector.editTasks(id, title);
+  } on Exception catch (e) {
+    print('Error: $e');
+  }
+}
+
+Future<void> toggleTask(Connector connector) async {
+  try {
+    stdout.write('Enter task ID : ');
+    final String? id = stdin.readLineSync();
+    if (id == null || id.isEmpty) {
+      throw Exception('Error, Invalid task ID');
+    }
+
+    await connector.toggleTasks(id);
   } on Exception catch (e) {
     print('Error: $e');
   }

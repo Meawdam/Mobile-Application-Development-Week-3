@@ -47,4 +47,19 @@ void main() {
     expect(updatedTask.title, 'Updated title');
     expect(updatedTask.complete, false);
   });
+
+  test('5. Toggle task should update its completion status', () async {
+    final Connector connector = Connector();
+    await connector.addTasks('Toggle me');
+
+    final List<Task> tasks = await connector.getTasks();
+    final Task task = tasks.last;
+    await connector.toggleTasks(task.id);
+
+    final List<Task> updatedTasks = await connector.getTasks();
+    final Task updatedTask = updatedTasks.firstWhere(
+      (item) => item.id == task.id,
+    );
+    expect(updatedTask.complete, isTrue);
+  });
 }
