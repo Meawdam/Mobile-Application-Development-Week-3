@@ -81,12 +81,16 @@ Future<void> addTasks(Connector connector) async {
 
 Future<void> deleteTask(Connector connector) async {
   try {
-    stdout.write('Enter task ID : ');
-    String? id = stdin.readLineSync();
-    if (id == null || id.isEmpty) {
-      throw Exception('Error, Invalid task ID');
+    stdout.write('Enter task Index (Number): ');
+    String? input = stdin.readLineSync();
+    int? index = int.tryParse(input ?? '');
+    
+    if (index == null) {
+      throw Exception('Error, Invalid task Index');
     }
-    await connector.deleteTasks(id);
+    
+    await connector.deleteTasksByIndex(index);
+    print('Task #$index deleted successfully.');
   } on Exception catch (e) {
     print('Error: $e');
   }
@@ -94,19 +98,22 @@ Future<void> deleteTask(Connector connector) async {
 
 Future<void> editTask(Connector connector) async {
   try {
-    stdout.write('Enter task ID : ');
-    final String? id = stdin.readLineSync();
-    if (id == null || id.isEmpty) {
-      throw Exception('Error, Invalid task ID');
+    stdout.write('Enter task Index (Number): ');
+    String? input = stdin.readLineSync();
+    int? index = int.tryParse(input ?? '');
+    
+    if (index == null) {
+      throw Exception('Error, Invalid task Index');
     }
 
-    stdout.write('Enter new task title : ');
+    stdout.write('Enter new task title: ');
     final String? title = stdin.readLineSync();
     if (title == null || title.isEmpty) {
       throw Exception('Error, Invalid title');
     }
 
-    await connector.editTasks(id, title);
+    await connector.editTasksByIndex(index, title);
+    print('Task #$index updated successfully.');
   } on Exception catch (e) {
     print('Error: $e');
   }
@@ -114,13 +121,16 @@ Future<void> editTask(Connector connector) async {
 
 Future<void> toggleTask(Connector connector) async {
   try {
-    stdout.write('Enter task ID : ');
-    final String? id = stdin.readLineSync();
-    if (id == null || id.isEmpty) {
-      throw Exception('Error, Invalid task ID');
+    stdout.write('Enter task Index (Number): ');
+    String? input = stdin.readLineSync();
+    int? index = int.tryParse(input ?? '');
+    
+    if (index == null) {
+      throw Exception('Error, Invalid task Index');
     }
 
-    await connector.toggleTasks(id);
+    await connector.toggleTasksByIndex(index);
+    print('Task #$index status toggled successfully.');
   } on Exception catch (e) {
     print('Error: $e');
   }

@@ -12,8 +12,8 @@ class Task {
   }
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
-    json['id'] as String,
-    json['title'] as String,
-    json['complete'] as bool,
+    '${json['id'] ?? ''}',
+    '${json['title'] ?? ''}',
+    json['complete'] == true,
   );
 }
