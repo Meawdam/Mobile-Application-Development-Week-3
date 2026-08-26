@@ -1,6 +1,25 @@
 {
   "todo": [
-
+    {
+      "title": "Read a Book",
+      "complete": false,
+      "id": "fZVDbx-VzjM"
+    },
+    {
+      "title": "Updated title",
+      "complete": false,
+      "id": "CFUlziFmydE"
+    },
+    {
+      "title": "Toggle me",
+      "complete": true,
+      "id": "b6E5EBDVL8U"
+    },
+    {
+      "title": "Search Target Task",
+      "complete": false,
+      "id": "oGUK8AiZriA"
+    }
   ],
   "$schema": "./node_modules/json-server/schema.json"
 }

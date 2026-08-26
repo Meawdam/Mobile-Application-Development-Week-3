@@ -5,24 +5,21 @@ import 'package:http/http.dart' as http;
 
 class Connector {
   static const String baseUrl = "http://localhost:3000/todo";
-  static final List<Task> _localTasks = [Task('1', 'Cooking', false)];
-
-  List<Task> _cloneLocalTasks() => _localTasks
-      .map((task) => Task(task.id, task.title, task.complete))
-      .toList();
 
   // get task
   Future<List<Task>> getTasks() async {
     try {
       final http.Response res = await http.get(Uri.parse(baseUrl));
-      if (res.statusCode != 200) throw Exception('Bad response');
+      if (res.statusCode != 200) {
+        throw Exception('Failed to load tasks: ${res.statusCode}');
+      }
       final dynamic decoded = jsonDecode(res.body);
       final List<dynamic> data = decoded is List ? decoded : const [];
       return data
           .map((json) => Task.fromJson(json as Map<String, dynamic>))
           .toList();
-    } catch (_) {
-      return _cloneLocalTasks();
+    } catch (e) {
+      throw Exception('Could not connect to the server.');
     }
   }
 
@@ -49,29 +46,23 @@ class Connector {
         headers: headers,
         body: body,
       );
-      if (res.statusCode != 201) throw Exception('Bad response');
-    } catch (_) {
-      _localTasks.add(Task(
-        DateTime.now().millisecondsSinceEpoch.toString(),
-        cleanTitle,
-        false,
-      ));
+      if (res.statusCode != 201) {
+        throw Exception('Failed to add task: ${res.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Could not connect to the server.');
     }
   }
 
   // delete task
   Future<void> deleteTasks(String id) async {
     try {
-      final http.Response res = await http.delete(
-        Uri.parse('$baseUrl/$id'),
-      );
-      if (res.statusCode != 200) throw Exception('Bad response');
-    } catch (_) {
-      final int previousLength = _localTasks.length;
-      _localTasks.removeWhere((task) => task.id == id);
-      if (_localTasks.length == previousLength) {
-        throw Exception('Task not found');
+      final http.Response res = await http.delete(Uri.parse('$baseUrl/$id'));
+      if (res.statusCode != 200) {
+        throw Exception('Failed to delete task: ${res.statusCode}');
       }
+    } catch (e) {
+      throw Exception('Could not connect to the server.');
     }
   }
 
@@ -95,13 +86,11 @@ class Connector {
         headers: headers,
         body: body,
       );
-      if (res.statusCode != 200) throw Exception('Bad response');
-    } catch (_) {
-      final Task task = _localTasks.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw Exception('Task not found'),
-      );
-      task.title = cleanTitle;
+      if (res.statusCode != 200) {
+        throw Exception('Failed to edit task: ${res.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Could not connect to the server.');
     }
   }
 
@@ -116,7 +105,9 @@ class Connector {
       final http.Response taskResponse = await http.get(
         Uri.parse('$baseUrl/$id'),
       );
-      if (taskResponse.statusCode != 200) throw Exception('Bad response');
+      if (taskResponse.statusCode != 200) {
+        throw Exception('Failed to load task: ${taskResponse.statusCode}');
+      }
 
       final Task task = Task.fromJson(
         jsonDecode(taskResponse.body) as Map<String, dynamic>,
@@ -128,13 +119,11 @@ class Connector {
         headers: headers,
         body: body,
       );
-      if (res.statusCode != 200) throw Exception('Bad response');
-    } catch (_) {
-      final Task task = _localTasks.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw Exception('Task not found'),
-      );
-      task.complete = !task.complete;
+      if (res.statusCode != 200) {
+        throw Exception('Failed to toggle task: ${res.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Could not connect to the server.');
     }
   }
 
@@ -152,20 +141,10 @@ class Connector {
 
       final String normalizedQuery = query.toLowerCase();
       return tasks
-          .where(
-            (task) => task.title.toLowerCase().contains(normalizedQuery),
-          )
+          .where((task) => task.title.toLowerCase().contains(normalizedQuery))
           .toList();
-    } catch (_) {
-      final List<Task> tasks = _cloneLocalTasks();
-      final String query = title.trim();
-      if (query.isEmpty) return tasks;
-      final String normalizedQuery = query.toLowerCase();
-      return tasks
-          .where(
-            (task) => task.title.toLowerCase().contains(normalizedQuery),
-          )
-          .toList();
+    } catch (e) {
+      throw Exception('Could not connect to the server.');
     }
   }
 }
